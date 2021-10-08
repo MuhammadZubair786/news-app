@@ -61,10 +61,11 @@ class _headLineState extends State<headLine> {
                       child: Column(children: [
                         Padding(padding: EdgeInsets.all(20)),
                         Text(
-                          "Today News",
+                          "Today Head Line News",
                           style: TextStyle(
                               fontSize: 25,
                               fontFamily: 'Arial',
+                                color: Colors.pink[400],
                               fontWeight: FontWeight.bold),
                         ),
                         Padding(padding: EdgeInsets.all(10)),
@@ -187,16 +188,17 @@ class _headLineState extends State<headLine> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text("Title : " +
+                                                              Text(
                                                                   snapshot
                                                                       .data[i]
-                                                                      .title),
-                                                              Text(
-                                                                "Published At :" +
-                                                                    snapshot
-                                                                        .data[i]
-                                                                        .publishedAt,
-                                                              ),
+                                                                      .title,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                                                             Text(
+                                                              
+                                                              "Published At " +
+                                                                  snapshot
+                                                                      .data[i]
+                                                                      .publishedAt,
+                                                          style: TextStyle(color: Colors.pink), ),
                                                             ],
                                                           ))
 

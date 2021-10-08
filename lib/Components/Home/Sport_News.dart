@@ -194,6 +194,7 @@ class _SportNewsState extends State<SportNews> {
                   style: TextStyle(
                       fontSize: 25,
                       fontFamily: 'Arial',
+                       color: Colors.pink[400],
                       fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: EdgeInsets.all(10)),
@@ -287,6 +288,7 @@ class _SportNewsState extends State<SportNews> {
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontFamily: 'Arial',
+                                       color: Colors.green,
                                     ),
                            )
                           ),
@@ -371,7 +373,7 @@ class _SportNewsState extends State<SportNews> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text("Title : " +
+                                                              Text(
                                                                   snapshot
                                                                       .data[i]
                                                                       .title),

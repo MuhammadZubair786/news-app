@@ -189,36 +189,144 @@ class _newScreenState extends State<newScreen> {
       appBar: AppBar(
         title: Text("new"),
       ),
-      body: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.white,
-        elevation: 20,
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            value.image == null || value.image == ''
-                ? Image.asset('assets/no.jpg')
-                : Image.network(value.image,
-                  width:
-                                                                          400,
-                                                                      height:
-                                                                          200,
-                                                                      fit: BoxFit
-                                                                          .fill),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                color: Colors.white,
+                elevation: 20,
+                child: Column(
+                  children: [
+                    value.image == null || value.image == ''
+                        ? Image.asset('assets/no.jpg')
+                        : Image.network(value.image,
+                            width: 400, height: 200, fit: BoxFit.fill),
 
-            value.description == null || value.description == ''
-                ? Text('Description : NoDescription')
-                : Text('Description : ' + value.description),
-            value.publishedAt == null || value.publishedAt == ''
-                ? Text("Date : ")
-                : Text(value.publishedAt),
-            // value.content == null || value.content == '' ?  Text("Date : ") :  Text("data :"+value.content),
-            Text(select_country),
+                    // child: Row(
+                    //   verticalDirection: VerticalDirection.down,
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text( "Title : " ,style: TextStyle(color: Colors.pink),
 
-            Container(
-              child: Text("Title : " + value.title),
+                    //     ),
+                    //      value.title == null || value.title == ''
+                    //      ? Text('No Title')
+                    //   : Column(
+                    //    children :[ Text( value.title,style: TextStyle(color: Colors.black,fontSize: 25),),
+                    //    ])
+                    //   ],
+                    // ),
+                    SizedBox(height: 10,),
+                    Row(children: [
+                      Text("Title : ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+                    value.title == null || value.title == ''
+                        ? Text('No Title')
+                        : Container(
+                            child: Text(value.title,
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 18)),
+                          ),
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Row(children: [
+                      Text("Description : ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+                    value.description == null || value.description == ''
+                        ? Text('No Description')
+                        : Container(
+                            child: Text(value.description,
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 18)),
+                          ),
+
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Row(children: [
+                      Text("publishedAt : ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+                    value.publishedAt == null || value.publishedAt == ''
+                        ? Row(children: [
+                            Text("Not Show Date : ",
+                                style:
+                                    TextStyle(color: Colors.pink, fontSize: 25)),
+                          ])
+                        : Row(children: [
+                            Text(value.publishedAt,
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 18)),
+                          ]),
+
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Row(children: [
+                      Text("Country: ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+
+                    Row(
+                      children: [
+                        Text(select_country,
+                            style: TextStyle(color: Colors.black, fontSize: 18)),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Row(children: [
+                      Text("Source: ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+                    value.source == null || value.source == ''
+                        ? Row(children: [
+                            Text("No Sources : ",
+                                style:
+                                    TextStyle(color: Colors.pink, fontSize: 25)),
+                          ])
+                        : Row(children: [
+                            Text(value.source,
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 18)),
+                          ]),
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Row(children: [
+                      Text("Url : ",
+                          style: TextStyle(color: Colors.pink, fontSize: 25)),
+                    ]),
+                    value.url == null || value.url == ''
+                        ? Row(children: [
+                            Text("No Url : ",
+                                style:
+                                    TextStyle(color: Colors.pink, fontSize: 25)),
+                          ])
+                        : Container(
+                            child:  Text(value.url,
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 18)),
+                          ),
+                    Divider()
+                  ],
+                ),
+              ),
             ),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),

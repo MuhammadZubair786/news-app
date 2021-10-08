@@ -1,17 +1,27 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:new_app/Components/Drawer_Page/Drawer_Page.dart';
 import 'package:new_app/Components/Home/All_Data.dart';
 import 'package:new_app/Components/Home/Home.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_app/Components/Home/profile.dart';
 
 class Service extends StatefulWidget {
+  var userUid;
+  var Name;
+  var Email;
+  Service(this.userUid,this.Name,this.Email);
   @override
-  _ServiceState createState() => _ServiceState();
+  _ServiceState createState() => _ServiceState(userUid,Name,Email);
 }
 
 class _ServiceState extends State<Service> {
+
+   var userUid;
+  var Name;
+  var Email;
+  _ServiceState(this.userUid,this.Name,this.Email);
+
   bool pressCountry = false;
   bool pressCat = false;
   bool selectData = false;
@@ -311,13 +321,25 @@ class _ServiceState extends State<Service> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.cyan,
-            title: Text(
-              "Drawer Example",
-              style: TextStyle(color: Colors.black),
-            ),
-            iconTheme: IconThemeData(color: Colors.black),
+          appBar:  AppBar(
+          backgroundColor: Colors.cyan,
+          title: Text(
+            "News App",
+            style: TextStyle(color: Colors.white),
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.notification_important), onPressed: () {}),
+            IconButton(icon: Icon(Icons.search), onPressed: () {})
+          ],
+          elevation: 20,
+          titleSpacing: 4,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.pink[300], Colors.pink[400]])),
+          ),
           ),
           drawer: drawerTab(context),
           body: SingleChildScrollView(
@@ -327,7 +349,8 @@ class _ServiceState extends State<Service> {
                                             style: TextStyle(
                                               fontSize: 30,
                                               fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.pink
                                             ),),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -339,6 +362,7 @@ class _ServiceState extends State<Service> {
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'Arial',
+                       
                         ),
                       ),
                       Center(
@@ -501,7 +525,8 @@ class _ServiceState extends State<Service> {
                                             style: TextStyle(
                                               fontSize: 25,
                                               fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                                 color: Colors.pink[300]
                                             ),
                                           )
                                         : 
@@ -511,7 +536,8 @@ class _ServiceState extends State<Service> {
                                             style: TextStyle(
                                               fontSize: 25,
                                               fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                                 color: Colors.pink[300]
                                             ),)
                                         :
                                           chooseValue == 'Top News'  && chooseCountry != ''?
@@ -519,7 +545,8 @@ class _ServiceState extends State<Service> {
                                             style: TextStyle(
                                               fontSize: 25,
                                               fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                                 color: Colors.pink[300]
                                             ),)
                                         :
                                          chooseValue == 'sports'  && chooseCountry != '' ?
@@ -527,7 +554,8 @@ class _ServiceState extends State<Service> {
                                             style: TextStyle(
                                               fontSize: 25,
                                               fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                                 color: Colors.pink[300]
                                             ),)
                                          : Text("")
 
@@ -625,15 +653,17 @@ class _ServiceState extends State<Service> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text("Title : " +
+                                                              Text(
                                                                   snapshot
                                                                       .data[i]
-                                                                      .title),
+                                                                      .title,
+                                                                      style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
                                                               Text(
                                                                 "Published At :" +
                                                                     snapshot
                                                                         .data[i]
                                                                         .publishedAt,
+                                                                          style: TextStyle(color: Colors.pink)
                                                               ),
                                                             ],
                                                           ))
@@ -705,7 +735,7 @@ class _ServiceState extends State<Service> {
         ));
   }
 
-  Drawer drawerTab(BuildContext context) {
+Drawer drawerTab(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
@@ -725,7 +755,7 @@ class _ServiceState extends State<Service> {
               children: [
                 IconButton(
                   icon: Icon((Icons.supervised_user_circle_rounded)),
-                  color: Colors.blueGrey,
+                  color: Colors.red,
                   iconSize: 60,
                   onPressed: () {},
                 ),
@@ -734,11 +764,11 @@ class _ServiceState extends State<Service> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ("User"),
+                      (Name),
                       style: TextStyle(color: Colors.black),
                     ),
                     Text(
-                      ("User@gmail.com"),
+                      (Email),
                       style: TextStyle(color: Colors.black),
                     )
                   ],
@@ -767,7 +797,7 @@ class _ServiceState extends State<Service> {
                   onTap: () {
                     // Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Home()));
+                        MaterialPageRoute(builder: (context) => Home(userUid,Name,Email)));
                   },
                   child: ListTile(
                       leading: IconButton(
@@ -782,7 +812,7 @@ class _ServiceState extends State<Service> {
                   onTap: () {
                     // Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Service()));
+                        MaterialPageRoute(builder: (context) => Service(userUid,Name,Email)));
                   },
                   child: ListTile(
                       leading: IconButton(
@@ -794,13 +824,14 @@ class _ServiceState extends State<Service> {
                       title: Text("Search New")),
                 ),
                 ListTile(
-                    leading: IconButton(
-                      icon: Icon((Icons.featured_video_rounded)),
-                      color: Colors.blueGrey,
-                      iconSize: 30,
-                      onPressed: () {},
-                    ),
-                    title: Text("Favourite New")),
+                      leading: IconButton(
+                        icon: Icon((Icons.featured_video_rounded)),
+                        color: Colors.blueGrey,
+                        iconSize: 30,
+                        onPressed: () {},
+                      ),
+                      title: Text("Favourite New")),
+                
                 ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.contact_page)),
@@ -809,14 +840,20 @@ class _ServiceState extends State<Service> {
                       onPressed: () {},
                     ),
                     title: Text("Contact")),
-                ListTile(
+                GestureDetector(
+                  onTap: () {
+                    // Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Profile(userUid,Name,Email)));
+                  },
+                  child: ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.settings_sharp)),
                       color: Colors.blueGrey,
                       iconSize: 30,
                       onPressed: () {},
                     ),
-                    title: Text("User Profile")),
+                    title: Text("User Profile")),),
                 ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.login_outlined)),

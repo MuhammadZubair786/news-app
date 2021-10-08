@@ -189,10 +189,11 @@ class _TopNewsState extends State<TopNews> {
               child: Column(children: [
                 Padding(padding: EdgeInsets.all(20)),
                 Text(
-                  "Today Stories",
+                  "Popular News",
                   style: TextStyle(
                       fontSize: 25,
                       fontFamily: 'Arial',
+                       color: Colors.pink[400],
                       fontWeight: FontWeight.bold),
                 ),
                 Padding(padding: EdgeInsets.all(10)),
@@ -240,6 +241,7 @@ class _TopNewsState extends State<TopNews> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: 'Arial',
+                                   color: Colors.green,
                                 ),
                               ),
                             ]))
@@ -262,14 +264,14 @@ class _TopNewsState extends State<TopNews> {
                     } else {
                       return Column(
                         children: [
-                          Container(child: Text("Top Stories Of "+chooseValue,)),
+                          Container(child: Text("Popular News Of "+chooseValue,style: TextStyle(color: Colors.green),)),
                           ListView.builder(
                               physics: ScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, i) {
                                 return Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Column(
                                     children: [
                                       GestureDetector(
@@ -344,15 +346,19 @@ class _TopNewsState extends State<TopNews> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text("Title : " +
+                                                              Text(
                                                                   snapshot
                                                                       .data[i]
-                                                                      .title),
+                                                                      .title
+                                                                      ,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)
+                                                                      ),
                                                               Text(
                                                                 "Published At :" +
                                                                     snapshot
                                                                         .data[i]
                                                                         .publishedAt,
+                                                                        
+                                                          style: TextStyle(color: Colors.pink)
                                                               ),
                                                             ],
                                                           ))

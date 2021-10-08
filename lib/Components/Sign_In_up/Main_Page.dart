@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/Components/Drawer_Page/Drawer_Page.dart';
 import 'package:new_app/Components/Home/Home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import  'package:firebase_database/firebase_database.dart';
@@ -15,6 +14,8 @@ class _LoginPageState extends State<LoginPage> {
   TapGestureRecognizer _tapGestureRecognizer;
   bool _showSignIn;
   String userUid;
+  String Name;
+  String Email;
   
 
   @override
@@ -28,6 +29,10 @@ class _LoginPageState extends State<LoginPage> {
           // print("Hello");
         });
       };
+  }
+
+  direct(){
+     Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home(userUid = "NONE",Name = "Not Register user",Email = "Email None")));
   }
 
       drawer() async {
@@ -97,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
           print("User Name :" + data["username"]);
           print("User Email :" + data["email"]);
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => Home(userUid = user.user.uid,Name = data["username"],Email = data["email"])));
 
 
          
@@ -256,6 +261,20 @@ class _LoginPageState extends State<LoginPage> {
                 _showSignIn
                     ? buildsigninbottomSection()
                     : buildsignupbottomSection(),
+
+                    SizedBox(
+                height: 40,
+              ),
+              ElevatedButton(child: Container(child: Text("Open APP"),color: Colors.pink,),
+              onPressed: direct,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.pink[300],
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                textStyle: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold))
+
+ ,)
               ],
             ),
           ),

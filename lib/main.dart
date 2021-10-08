@@ -4,11 +4,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_app/Components/Home/Bussiness.dart';
 import 'package:new_app/Components/Home/Home.dart';
 import 'package:new_app/SplashScreen/SplashScreen.dart';
+import 'package:new_app/store/state.dart';
+import 'package:new_app/store/state.dart';
 
-import 'Components/Drawer_Page/Drawer_Page.dart';
 // import 'Home.dart';
 // import 'login_user.dart';
 // import 'register.dart';
+
+// enum Types {user}
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -2,36 +2,49 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/Components/Drawer_Page/Drawer_Page.dart';
+
 import 'package:new_app/Components/Home/All_Data.dart';
 import 'package:new_app/Components/Home/Categories.dart';
 import 'package:new_app/Components/Home/Headline.dart';
 import 'package:new_app/Components/Home/Sport_News.dart';
 import 'package:new_app/Components/Home/Top_new.dart';
 import 'package:new_app/Components/Home/new_screen.dart';
+import 'package:new_app/Components/Home/profile.dart';
 import 'package:new_app/Components/Search/Search.dart';
 import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
-  // var userUid;
-  // Home(this.userUid);
+  var userUid;
+  var Name;
+  var Email;
+  Home(this.userUid,this.Name,this.Email);
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeState createState() => _HomeState(userUid,Name,Email);
 }
 
 class _HomeState extends State<Home> {
-  // var userUid;
-  // _HomeState(this.userUid);
+ var userUid;
+  var Name;
+  var Email;
+  _HomeState(this.userUid,this.Name,this.Email);
+
+  
 
   @override
-  // void initState() {
-  //   super.initState();
-  // //   print(value.title);
-  // // print(value.content);
-  // // print(userUid);
+  void initState() {
+   
+    super.initState();
+    
+  //   print(value.title);
+  // print(value.content);
+       
+  print("User Uid :"+userUid);
+    print("User Name 2 :" + Name);
+          print("User Email  2:" + Email);
 
-  // }
+  }
 
   int currentIndex = 0;
 
@@ -407,12 +420,12 @@ class _HomeState extends State<Home> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text("Title : " +
+                                                            Text(
                                                                 snapshot.data[i]
-                                                                    .title),
+                                                                    .title,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                                                             Text(
                                                               
-                                                              "Published At :" +
+                                                              "Published At " +
                                                                   snapshot
                                                                       .data[i]
                                                                       .publishedAt,
@@ -550,18 +563,16 @@ class _HomeState extends State<Home> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                Text("Title : " +
-                                                                    snapshot
-                                                                        .data[i]
-                                                                        .title),
                                                                 Text(
-                                                                  "Published At :" +
-                                                                      snapshot
-                                                                          .data[
-                                                                              i]
-                                                                          .publishedAt,
-                                                                          style: TextStyle(color: Colors.pink),
-                                                                ),
+                                                                snapshot.data[i]
+                                                                    .title,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                                                            Text(
+                                                              
+                                                              "Published At " +
+                                                                  snapshot
+                                                                      .data[i]
+                                                                      .publishedAt,
+                                                          style: TextStyle(color: Colors.pink), ),
                                                               ],
                                                             ))
 
@@ -705,11 +716,11 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ("User"),
+                      (Name),
                       style: TextStyle(color: Colors.black),
                     ),
                     Text(
-                      ("User@gmail.com"),
+                      (Email),
                       style: TextStyle(color: Colors.black),
                     )
                   ],
@@ -738,7 +749,7 @@ class _HomeState extends State<Home> {
                   onTap: () {
                     // Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Home()));
+                        MaterialPageRoute(builder: (context) => Home(userUid,Name,Email)));
                   },
                   child: ListTile(
                       leading: IconButton(
@@ -753,7 +764,7 @@ class _HomeState extends State<Home> {
                   onTap: () {
                     // Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Service()));
+                        MaterialPageRoute(builder: (context) => Service(userUid,Name,Email)));
                   },
                   child: ListTile(
                       leading: IconButton(
@@ -765,13 +776,14 @@ class _HomeState extends State<Home> {
                       title: Text("Search New")),
                 ),
                 ListTile(
-                    leading: IconButton(
-                      icon: Icon((Icons.featured_video_rounded)),
-                      color: Colors.blueGrey,
-                      iconSize: 30,
-                      onPressed: () {},
-                    ),
-                    title: Text("Favourite New")),
+                      leading: IconButton(
+                        icon: Icon((Icons.featured_video_rounded)),
+                        color: Colors.blueGrey,
+                        iconSize: 30,
+                        onPressed: () {},
+                      ),
+                      title: Text("Favourite New")),
+                
                 ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.contact_page)),
@@ -780,14 +792,20 @@ class _HomeState extends State<Home> {
                       onPressed: () {},
                     ),
                     title: Text("Contact")),
-                ListTile(
+                GestureDetector(
+                  onTap: () {
+                    // Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Profile(userUid,Name,Email)));
+                  },
+                  child: ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.settings_sharp)),
                       color: Colors.blueGrey,
                       iconSize: 30,
                       onPressed: () {},
                     ),
-                    title: Text("User Profile")),
+                    title: Text("User Profile")),),
                 ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.login_outlined)),
@@ -802,7 +820,6 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
 class UserModel {
   var author;
   var title;
