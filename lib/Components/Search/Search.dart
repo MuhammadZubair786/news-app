@@ -1,26 +1,28 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/Components/Home/All_Data.dart';
+import 'package:new_app/Components/Home/Show_Detail_News.dart';
+import 'package:new_app/Components/Favourite_New/Favourite.dart';
 import 'package:new_app/Components/Home/Home.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_app/Components/Home/profile.dart';
+import 'package:new_app/Components/Profile/profile.dart';
+import 'package:new_app/SplashScreen/SplashScreen.dart';
 
 class Service extends StatefulWidget {
   var userUid;
   var Name;
   var Email;
-  Service(this.userUid,this.Name,this.Email);
+  Service(this.userUid, this.Name, this.Email);
   @override
-  _ServiceState createState() => _ServiceState(userUid,Name,Email);
+  _ServiceState createState() => _ServiceState(userUid, Name, Email);
 }
 
 class _ServiceState extends State<Service> {
-
-   var userUid;
+  var userUid;
   var Name;
   var Email;
-  _ServiceState(this.userUid,this.Name,this.Email);
+  _ServiceState(this.userUid, this.Name, this.Email);
 
   bool pressCountry = false;
   bool pressCat = false;
@@ -30,7 +32,18 @@ class _ServiceState extends State<Service> {
 
   bool data = true;
 
+  String _user;
+
   String title;
+
+   signOut(){
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signOut();
+    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SplashScreen()));
+
+
+  }
   // DateTime selectedDate = DateTime.now();
   // DateTime FromDate = DateTime.now();
 
@@ -211,8 +224,6 @@ class _ServiceState extends State<Service> {
         news = [];
       });
 
-     
-
       if (chooseValue == 'Headline' && chooseCountry == '') {
         var res = await http.get(Uri.parse(
             'https://newsapi.org/v2/top-headlines?country=us&apiKey=1866ed19591c4d99880992a3ca614497'));
@@ -234,7 +245,8 @@ class _ServiceState extends State<Service> {
         }
 
         return news;
-      } else if (chooseValue == 'Headline' || chooseValue == 'Top News' && chooseCountry != '') {
+      } else if (chooseValue == 'Headline' ||
+          chooseValue == 'Top News' && chooseCountry != '') {
         print("not head");
         setState(() {
           news = [];
@@ -260,13 +272,9 @@ class _ServiceState extends State<Service> {
         }
 
         return news;
-      } 
-      
-      else if (chooseValue != '' &&
+      } else if (chooseValue != '' &&
           chooseValue != 'Headline' &&
           chooseCountry != '') {
-
-           
         print("find");
         print(selectCty);
         // print(selectedDate);
@@ -321,37 +329,38 @@ class _ServiceState extends State<Service> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          appBar:  AppBar(
-          backgroundColor: Colors.cyan,
-          title: Text(
-            "News App",
-            style: TextStyle(color: Colors.white),
-          ),
-          iconTheme: IconThemeData(color: Colors.white),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.notification_important), onPressed: () {}),
-            IconButton(icon: Icon(Icons.search), onPressed: () {})
-          ],
-          elevation: 20,
-          titleSpacing: 4,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.pink[300], Colors.pink[400]])),
-          ),
+          appBar: AppBar(
+            backgroundColor: Colors.cyan,
+            title: Text(
+              "News App",
+              style: TextStyle(color: Colors.white),
+            ),
+            iconTheme: IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.notification_important), onPressed: () {}),
+              IconButton(icon: Icon(Icons.search), onPressed: () {})
+            ],
+            elevation: 20,
+            titleSpacing: 4,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.pink[300], Colors.pink[400]])),
+            ),
           ),
           drawer: drawerTab(context),
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Text("Search News",
-                                            style: TextStyle(
-                                              fontSize: 30,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.pink
-                                            ),),
+                Text(
+                  "Search News",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontFamily: 'Arial',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pink),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 50.0, top: 5, bottom: 5, right: 10),
@@ -362,7 +371,6 @@ class _ServiceState extends State<Service> {
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'Arial',
-                       
                         ),
                       ),
                       Center(
@@ -475,7 +483,7 @@ class _ServiceState extends State<Service> {
                           SizedBox(
                             height: 20,
                           ),
-                         
+
                           // Text("${selectedDate.toLocal()}".split(' ')[0]),
                           // Text("${FromDate.toLocal()}".split(' ')[0]),
 
@@ -523,49 +531,49 @@ class _ServiceState extends State<Service> {
                                                         chooseCountry
                                                     : '',
                                             style: TextStyle(
-                                              fontSize: 25,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold,
-                                                 color: Colors.pink[300]
-                                            ),
+                                                fontSize: 25,
+                                                fontFamily: 'Arial',
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.pink[300]),
                                           )
-                                        : 
-
-                                        chooseValue == 'business'  && chooseCountry != ''?
-                                        Text("Bussiness News Of "+chooseCountry,
-                                            style: TextStyle(
-                                              fontSize: 25,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold,
-                                                 color: Colors.pink[300]
-                                            ),)
-                                        :
-                                          chooseValue == 'Top News'  && chooseCountry != ''?
-                                        Text("Top News Of "+chooseCountry,
-                                            style: TextStyle(
-                                              fontSize: 25,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold,
-                                                 color: Colors.pink[300]
-                                            ),)
-                                        :
-                                         chooseValue == 'sports'  && chooseCountry != '' ?
-                                        Text("Sports News Of "+chooseCountry,
-                                            style: TextStyle(
-                                              fontSize: 25,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.bold,
-                                                 color: Colors.pink[300]
-                                            ),)
-                                         : Text("")
-
-
-
-
-                                        
-                                          
-                                        
-                                        ),
+                                        : chooseValue == 'business' &&
+                                                chooseCountry != ''
+                                            ? Text(
+                                                "Bussiness News Of " +
+                                                    chooseCountry,
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    fontFamily: 'Arial',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.pink[300]),
+                                              )
+                                            : chooseValue == 'Top News' &&
+                                                    chooseCountry != ''
+                                                ? Text(
+                                                    "Top News Of " +
+                                                        chooseCountry,
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontFamily: 'Arial',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Colors.pink[300]),
+                                                  )
+                                                : chooseValue == 'sports' &&
+                                                        chooseCountry != ''
+                                                    ? Text(
+                                                        "Sports News Of " +
+                                                            chooseCountry,
+                                                        style: TextStyle(
+                                                            fontSize: 25,
+                                                            fontFamily: 'Arial',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors
+                                                                .pink[300]),
+                                                      )
+                                                    : Text("")),
                                 ListView.builder(
                                     physics: ScrollPhysics(),
                                     shrinkWrap: true,
@@ -581,7 +589,9 @@ class _ServiceState extends State<Service> {
                                                 MaterialPageRoute(
                                                     builder: (_) => Alldata(
                                                         value =
-                                                            snapshot.data[i])),
+                                                            snapshot.data[i],
+                                                              _user = userUid
+                                                            )),
                                               ),
                                               child: Padding(
                                                 padding:
@@ -657,14 +667,21 @@ class _ServiceState extends State<Service> {
                                                                   snapshot
                                                                       .data[i]
                                                                       .title,
-                                                                      style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
                                                               Text(
-                                                                "Published At :" +
-                                                                    snapshot
-                                                                        .data[i]
-                                                                        .publishedAt,
-                                                                          style: TextStyle(color: Colors.pink)
-                                                              ),
+                                                                  "Published At :" +
+                                                                      snapshot
+                                                                          .data[
+                                                                              i]
+                                                                          .publishedAt,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .pink)),
                                                             ],
                                                           ))
 
@@ -735,7 +752,7 @@ class _ServiceState extends State<Service> {
         ));
   }
 
-Drawer drawerTab(BuildContext context) {
+  Drawer drawerTab(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
@@ -823,14 +840,22 @@ Drawer drawerTab(BuildContext context) {
                       ),
                       title: Text("Search New")),
                 ),
-                ListTile(
-                      leading: IconButton(
-                        icon: Icon((Icons.featured_video_rounded)),
-                        color: Colors.blueGrey,
-                        iconSize: 30,
-                        onPressed: () {},
-                      ),
-                      title: Text("Favourite New")),
+                  GestureDetector(
+                  onTap: () {
+                    // Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FavouriteNews(userUid,Name,Email)));
+                  },
+                  child: ListTile(
+                        leading: IconButton(
+                          icon: Icon((Icons.featured_video_rounded)),
+                          color: Colors.blueGrey,
+                          iconSize: 30,
+                          onPressed: (){},
+                        ),
+                        title: Text("Favourite New")),
+                ),
+                     
                 
                 ListTile(
                     leading: IconButton(
@@ -854,17 +879,60 @@ Drawer drawerTab(BuildContext context) {
                       onPressed: () {},
                     ),
                     title: Text("User Profile")),),
-                ListTile(
-                    leading: IconButton(
-                      icon: Icon((Icons.login_outlined)),
-                      color: Colors.blueGrey,
-                      iconSize: 30,
-                      onPressed: () {},
-                    ),
-                    title: Text("Log Out")),
+                 GestureDetector(
+                  onTap:
+                     signOut
+                    // // Navigator.pop(context);
+                    //  FirebaseAuth.instance.signOut();
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => SplashScreen()));
+                  ,
+                  child: ListTile(
+                      leading: IconButton(
+                        icon: Icon((Icons.login_outlined)),
+                        color: Colors.blueGrey,
+                        iconSize: 30,
+                        onPressed: () {},
+                      ),
+                      title: Text("Log Out")),
+                ),
               ])
         ],
       ),
     );
   }
+}
+
+class UserModel {
+  var author;
+  var title;
+  var description;
+  var url;
+  var source;
+  var image;
+  var category;
+  var language;
+  var country;
+  var publishedAt;
+
+  UserModel(this.author, this.title, this.description, this.url, this.source,
+      this.image, this.category, this.language, this.country, this.publishedAt);
+}
+
+class UserModel2 {
+  var author;
+  var title;
+  var description;
+  var url;
+  var source;
+  var image;
+  var category;
+  var language;
+  var country;
+
+  var publishedAt;
+  var content;
+
+  UserModel2(this.author, this.title, this.description, this.url, this.image,
+      this.publishedAt, this.content);
 }

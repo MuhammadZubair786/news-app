@@ -1,7 +1,6 @@
 // import 'package:firebase_db_auth/Splash_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:new_app/Components/Home/Bussiness.dart';
 import 'package:new_app/Components/Home/Home.dart';
 import 'package:new_app/SplashScreen/SplashScreen.dart';
 import 'package:new_app/store/state.dart';
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
               // "/sig_up" :  (context)=> Register(),
               // "/home" :  (context)=> Drawer_Page(),
               // "/home": (context)=>Home(),
-              "/bussiness":(context) =>Bussiness()
+            
             },
             
          

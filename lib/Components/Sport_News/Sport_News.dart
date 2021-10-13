@@ -3,14 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:new_app/Components/Home/All_Data.dart';
+import 'package:new_app/Components/Home/Show_Detail_News.dart';
 
 class SportNews extends StatefulWidget {
+  var userUid;
+ 
+  SportNews(this.userUid);
   @override
-  _SportNewsState createState() => _SportNewsState();
+  _SportNewsState createState() => _SportNewsState(userUid);
 }
 
 class _SportNewsState extends State<SportNews> {
+
+  var userUid;
+   _SportNewsState(this.userUid);
+
+   String _user;
+
   var news = [];
   bool data = true;
 
@@ -305,10 +314,12 @@ class _SportNewsState extends State<SportNews> {
                                         onTap: () => Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (_) => Alldata(
-                                                  value = snapshot.data[i])),
+                                                  value = snapshot.data[i],
+                                                  _user = userUid
+                                                  )),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
+                                          padding: const EdgeInsets.all(4.0),
                                           child: Container(
                                               decoration: BoxDecoration(
                                                 // color: Colors.pink,

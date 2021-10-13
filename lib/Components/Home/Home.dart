@@ -1,18 +1,16 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:new_app/Components/Home/All_Data.dart';
-import 'package:new_app/Components/Home/Categories.dart';
-import 'package:new_app/Components/Home/Headline.dart';
-import 'package:new_app/Components/Home/Sport_News.dart';
-import 'package:new_app/Components/Home/Top_new.dart';
-import 'package:new_app/Components/Home/new_screen.dart';
-import 'package:new_app/Components/Home/profile.dart';
+import 'package:new_app/Components/Home/Show_Detail_News.dart';
+import 'package:new_app/Components/Favourite_New/Favourite.dart';
+import 'package:new_app/Components/Headline/Headline.dart';
+import 'package:new_app/Components/Sport_News/Sport_News.dart';
+import 'package:new_app/Components/Top_News/Top_new.dart';
+import 'package:new_app/Components/Profile/profile.dart';
 import 'package:new_app/Components/Search/Search.dart';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:new_app/SplashScreen/SplashScreen.dart';
 
 class Home extends StatefulWidget {
   var userUid;
@@ -53,45 +51,43 @@ class _HomeState extends State<Home> {
 
   var value;
 
+String _user;
+String uid;
   bool chg = true;
 
   String cat = '';
 
-  var players = [
-    {"Category": "business"},
-    {"Category": " entertainment"},
-    {"Category": "health"},
-    {"Category": "science"},
-    {"Category": "sports"},
-    {"Category": "technology"},
+  var Categories = [
+    {"Category": "business","Icon":"Icons.business_center_sharp","Category_name": "Bussiness"},
+    {"Category": "entertainment","Icon":"movie_filter_outlined","Category_name": "Entertainment"},
+    {"Category": "health","Icon":"hail","Category_name": "Health"},
+    {"Category": "science","Icon":"science_rounded","Category_name": "Science"},
+    {"Category": "sports","Icon":"sports_soccer_sharp","Category_name": "Sports"},
+    {"Category": "technology","Icon":"computer_rounded","Category_name": "Technology"},
   ];
 
   var users = [];
   var users2 = [];
 
   Future<List<dynamic>> getuser() async {
+     setState(() {
+        users2 = [];
+        users = [];
+      });
     if (cat == '') {
       var res = await http.get(Uri.parse(
-          'http://api.mediastack.com/v1/news?access_key=b89e7c310e48c250ae5ddd5f0f3978b7'));
+          'https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&apiKey=1866ed19591c4d99880992a3ca614497'));
       var jsonData = jsonDecode(res.body);
-      // print(jsonData["data"]);
+      // print(jsonData['articles']);
 
-      for (var i in jsonData["data"]) {
-        UserModel user = UserModel(
-            i['author'],
-            i['title'],
-            i['description'],
-            i['url'],
-            i['source'],
-            i['image'],
-            i['category'],
-            i['language'],
-            i['country'],
-            i['published_at']);
-        users.add(user);
+      for (var i in jsonData['articles']) {
+        UserModel2 user2 = UserModel2(i['author'], i['title'], i['description'],
+            i['url'], i['urlToImage'], i['publishedAt'], i['content']);
+        users2.add(user2);
+        // print(i['urlToImage']);
       }
 
-      return users;
+      return users2;
     } else {
       // print(cat);
       // print(new DateTime(now.year, now.month, now.day));
@@ -144,6 +140,15 @@ class _HomeState extends State<Home> {
     // print(jsonData['articles'][0]);
 
     // getcat(cat);
+  }
+
+  signOut(){
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signOut();
+    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SplashScreen()));
+
+
   }
 
   //  getcat(cat) async {
@@ -250,7 +255,7 @@ class _HomeState extends State<Home> {
               tabs: [
                 Tab(
                   child: Text(
-                    "Top Stories",
+                    "Top News",
                     style: TextStyle(fontSize: 11),
                   ),
                 ),
@@ -298,9 +303,9 @@ class _HomeState extends State<Home> {
                               color: Colors.pink,
                               fontWeight: FontWeight.bold),
                         ),
-                        Padding(padding: EdgeInsets.all(10)),
+                        Padding(padding: EdgeInsets.all(4)),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: buildCategories(),
                         ),
                       ]),
@@ -360,9 +365,12 @@ class _HomeState extends State<Home> {
                                                 onTap: () =>
                                                     Navigator.of(context).push(
                                                   MaterialPageRoute(
-                                                      builder: (_) => newScreen(
-                                                          value = snapshot
-                                                              .data[i])),
+                                                      builder: (_) =>  Alldata(
+                                                          value = snapshot.data[i],
+                                                          _user = userUid
+                                                  )
+                                                          
+                                                          )
                                                 ),
                                                 child: Padding(
                                                   padding:
@@ -490,7 +498,9 @@ class _HomeState extends State<Home> {
                                                   MaterialPageRoute(
                                                       builder: (_) => Alldata(
                                                           value = snapshot
-                                                              .data[i])),
+                                                              .data[i],
+                                                              _user = userUid
+                                                              )),
                                                 ),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(
@@ -640,13 +650,13 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              child: headLine(),
+              child: headLine(userUid=userUid),
             ),
             Container(
-              child: TopNews(),
+              child: TopNews(userUid=userUid),
             ),
             Container(
-              child: SportNews(),
+              child: SportNews(userUid=userUid),
             ),
           ],
         ),
@@ -663,24 +673,65 @@ class _HomeState extends State<Home> {
       childAspectRatio: (0.9 / .4),
       shrinkWrap: true,
       children: List<Widget>.generate(
-        players.length,
+        Categories.length,
         (index) {
           return Padding(
+            
             padding: const EdgeInsets.all(5.0),
-            child: Container(
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.pink[400], // background
-                    onPrimary: Colors.white, // foreground
-                  ),
-                  onPressed: () => getdata(players[index]['Category']),
-                  child: Text(players[index]['Category'])),
+            child:  SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              
+              
+              child: Container(
+                width: MediaQuery.of(context).size.width*100,
+                
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.pink[400], // background
+                      onPrimary: Colors.white, // foreground
+                    ),
+                    onPressed: () => getdata(Categories[index]['Category']),
+                    child: Row(
+                      children: [
 
-              // image: DecorationImage(
-              //   image: AssetImage('assets/main.png'),
-              //   fit: BoxFit.cover,
-              // ),
-            ),
+                        Categories[index]['Category'] == 'business' ?
+                          Icon(Icons.business_center_sharp,size: 40,)
+                          : 
+                          Text(""),
+                           Categories[index]['Category'] == 'sports' ?
+                          Icon(Icons.sports_basketball,size: 40,)
+                          : 
+                          Text(""),
+                            Categories[index]['Category'] == 'health' ?
+                          Icon(Icons.hail,size: 40,)
+                          : 
+                          Text(""),
+                            Categories[index]['Category'] == 'science' ?
+                          Icon(Icons.science_sharp,size: 40,)
+                          : 
+                          Text(""),
+                           Categories[index]['Category'] == 'entertainment' ?
+                          Icon(Icons.movie_filter_outlined,size: 40,)
+                          : 
+                          Text(""),
+                           Categories[index]['Category'] == 'technology' ?
+                          Icon(Icons.computer_sharp,size: 40,)
+                          : 
+                          Text(""),
+                          SizedBox(width: 5,),
+
+                  
+                      
+                        Text(Categories[index]['Category_name']),
+                      ],
+                    )),
+
+                // image: DecorationImage(
+                //   image: AssetImage('assets/main.png'),
+                //   fit: BoxFit.cover,
+                // )
+              ),
+            )
           );
         },
       ),
@@ -775,14 +826,22 @@ class _HomeState extends State<Home> {
                       ),
                       title: Text("Search New")),
                 ),
-                ListTile(
-                      leading: IconButton(
-                        icon: Icon((Icons.featured_video_rounded)),
-                        color: Colors.blueGrey,
-                        iconSize: 30,
-                        onPressed: () {},
-                      ),
-                      title: Text("Favourite New")),
+                  GestureDetector(
+                  onTap: () {
+                    // Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FavouriteNews(userUid,Name,Email)));
+                  },
+                  child: ListTile(
+                        leading: IconButton(
+                          icon: Icon((Icons.featured_video_rounded)),
+                          color: Colors.blueGrey,
+                          iconSize: 30,
+                          onPressed: (){},
+                        ),
+                        title: Text("Favourite New")),
+                ),
+                     
                 
                 ListTile(
                     leading: IconButton(
@@ -806,14 +865,24 @@ class _HomeState extends State<Home> {
                       onPressed: () {},
                     ),
                     title: Text("User Profile")),),
-                ListTile(
+                 GestureDetector(
+                  onTap:
+                     signOut
+                    // // Navigator.pop(context);
+                    //  FirebaseAuth.instance.signOut();
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => SplashScreen()));
+                  ,
+                  child:  ListTile(
                     leading: IconButton(
                       icon: Icon((Icons.login_outlined)),
                       color: Colors.blueGrey,
                       iconSize: 30,
                       onPressed: () {},
                     ),
-                    title: Text("Log Out")),
+                    title: Text("Log Out")),)
+
+
               ])
         ],
       ),
